@@ -70,6 +70,7 @@ RUN cd /root/ws \
  && git clone --recursive https://github.com/MASKOR/mapit.git \
  && ldconfig \
  && cd mapit/ \
+ && git checkout v0.5.0 \
  && mkdir build \
  && cd build \
  && cmake .. -DCMAKE_CXX_FLAGS="-std=c++11" -DCMAKE_CXX_FLAGS_DEBUG="-g -std=c++11" \
