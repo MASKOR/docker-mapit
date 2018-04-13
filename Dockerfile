@@ -90,7 +90,7 @@ RUN cd /root/ws/mapit/build/test/unit_tests/ \
     fi
 
 EXPOSE 5555
-VOLUME ["/root/ws/build/tools/mapitd/.mapit"]
+VOLUME ["/root/ws/mapit/build/tools/mapitd/.mapit"]
 
 RUN mkdir /root/ws/scripts/
 COPY mapit.sh /root/ws/scripts/
