@@ -5,18 +5,20 @@ RUN dnf install --assumeyes \
         boost-devel eigen3-devel cppzmq-devel OpenEXR-devel \
         protobuf protobuf-devel protobuf-lite-devel \
         cmake cmake-gui automake libtool gtest-devel gtest wget gcc-c++ \
-        yaml-cpp-devel libuuid-devel
+        yaml-cpp-devel libuuid-devel \
+        git \
+        flann flann-devel libpcap-devel \
+        blosc-devel blosc cppunit-devel cppunit-devel glfw-devel ilmbase-devel OpenEXR-devel tbb-devel python-devel libXi-devel \
+        qt5 qt5-devel \
+ && dnf groupinstall --assumeyes "Development Tools" "Development Libraries"
 
 # Install PCL
-RUN dnf install --assumeyes flann flann-devel git \
- && dnf groupinstall --assumeyes "Development Tools" "Development Libraries"
 RUN mkdir /root/ws \
  && cd /root/ws/ \
  && git clone https://github.com/PointCloudLibrary/pcl.git \
  && cd pcl/ \
  && git checkout pcl-1.8.1 \
- && mkdir build
-RUN dnf install --assumeyes libpcap-devel \
+ && mkdir build \
  && cd /root/ws/pcl/build/ \
  && cmake .. -DWITH_VTK=false -DPCL_ENABLE_SSE=false \
  && make -j4 \
@@ -27,8 +29,7 @@ RUN dnf install --assumeyes libpcap-devel \
 # Instal ROS (not yet)
 
 # Install openVDB
-RUN dnf install --assumeyes blosc-devel blosc cppunit-devel cppunit-devel glfw-devel ilmbase-devel OpenEXR-devel tbb-devel python-devel libXi-devel \
- && cd /root/ws/ \
+RUN cd /root/ws/ \
  && git clone https://github.com/dreamworksanimation/openvdb.git \
  && cd openvdb/ \
  && git checkout v4.0.2 \
@@ -64,12 +65,6 @@ RUN cd /root/ws \
  && cd /root/ws \
  && rm -rf json11/
 
-# Install qt
-
-RUN dnf install --assumeyes qt5
-
-RUN dnf install --assumeyes qt5-devel
-
 # Install mapit
 RUN cd /root/ws \
  && git clone --recursive https://github.com/MASKOR/mapit.git \
@@ -95,10 +90,6 @@ RUN cd /root/ws/mapit/build/test/unit_tests/ \
     fi
 
 EXPOSE 5555
-
-#HEALTHCHECK --interval=60s --timeout=15s \
-#            CMD netstat -lntp | grep -q '0\.0\.0\.0:9091'
-
 VOLUME ["/root/ws/build/tools/mapitd/.mapit"]
 
 RUN mkdir /root/ws/scripts/
