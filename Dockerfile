@@ -15,16 +15,16 @@ RUN dnf install --assumeyes \
 # Install PCL
 RUN mkdir /root/ws \
  && cd /root/ws/ \
- && git clone https://github.com/PointCloudLibrary/pcl.git \
- && cd pcl/ \
- && git checkout pcl-1.8.1 \
+ && wget -q https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz \
+ && tar xfvz pcl-1.8.1.tar.gz \
+ && cd pcl-pcl-1.8.1/ \
  && mkdir build \
- && cd /root/ws/pcl/build/ \
+ && cd build/ \
  && cmake .. -DWITH_VTK=false -DPCL_ENABLE_SSE=false \
  && make -j4 \
  && make -j4 install \
  && cd /root/ws \
- && rm -rf pcl
+ && rm -rf pcl-pcl-1.8.1/ pcl-1.8.1.tar.gz
 
 # Instal ROS (not yet)
 
