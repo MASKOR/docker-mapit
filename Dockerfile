@@ -26,7 +26,26 @@ RUN mkdir /root/ws \
  && cd /root/ws \
  && rm -rf pcl-pcl-1.8.1/ pcl-1.8.1.tar.gz
 
-# Instal ROS (not yet)
+# Instal ROS
+RUN dnf install --assumeyes \
+        python-empy poco-devel tinyxml2-devel lz4-devel urdfdom-headers-devel qhull-devel libuuid-devel urdfdom-devel collada-dom-devel yaml-cpp-devel \
+        python-rosdep python-wstool python-rosinstall @buildsys-build python2-netifaces pyparsing python3-rosinstall_generator \
+        tinyxml-devel python-qt5 python-qt5-devel assimp-devel ogre-devel python-defusedxml
+RUN mkdir -p /opt/ros/catkin_ws/ \
+ && cd /opt/ros/catkin_ws/ \
+ && rosdep init \
+ && rosdep update \
+ && rosinstall_generator desktop --rosdistro kinetic --deps --wet-only --tar > kinetic-desktop-wet.rosinstall \
+ && wstool init -j8 src kinetic-desktop-wet.rosinstall \
+ && rosinstall_generator pcl_conversions --rosdistro kinetic --deps --wet-only --tar > kinetic-pcl_conversions-wet.rosinstall \
+ && wstool merge -t src kinetic-pcl_conversions-wet.rosinstall \
+ && wstool update -t src \
+ && rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
+RUN cd /opt/ros/catkin_ws/ \
+ && ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release
+
+RUN echo "source /opt/ros/catkin_ws/install_isolated/setup.bash" >> /root/.bashrc \
+ && source /opt/ros/catkin_ws/install_isolated/setup.bash
 
 # Install openVDB
 RUN cd /root/ws/ \
@@ -66,7 +85,8 @@ RUN cd /root/ws \
  && rm -rf json11/
 
 # Install mapit
-RUN cd /root/ws \
+RUN source /opt/ros/catkin_ws/install_isolated/setup.bash \
+ && cd /root/ws \
  && git clone --recursive https://github.com/MASKOR/mapit.git \
  && ldconfig \
  && cd mapit/ \
