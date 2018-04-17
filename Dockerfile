@@ -30,9 +30,9 @@ RUN mkdir /root/ws \
 
 # Install openVDB
 RUN cd /root/ws/ \
- && git clone https://github.com/dreamworksanimation/openvdb.git \
- && cd openvdb/ \
- && git checkout v4.0.2 \
+ && wget -q https://github.com/dreamworksanimation/openvdb/archive/v4.0.2.tar.gz \
+ && tar xfvz v4.0.2.tar.gz \
+ && cd openvdb-4.0.2/ \
  && mkdir build \
  && cd build \
  && cmake .. -DGLFW_LIBRARY_PATH=/usr/lib64/ \
@@ -51,7 +51,7 @@ RUN cd /root/ws/ \
  && make -j8 \
  && make install \
  && cd /root/ws \
- && rm -rf openvdb/
+ && rm -rf openvdb-4.0.2/ v4.0.2.tar.gz
 
 # Install Json11
 RUN cd /root/ws \
